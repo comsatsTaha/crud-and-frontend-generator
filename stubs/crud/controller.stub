@@ -1,0 +1,100 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\{{ modelClass }};
+use App\Http\Requests\Store{{ modelClass }}Request;
+use App\Http\Requests\Update{{ modelClass }}Request;
+use Inertia\Inertia;
+use Illuminate\Http\Request;
+
+class {{ controllerName }} extends Controller
+{
+    public function index(Request $request)
+    {
+        $query = {{ modelClass }}::{{ withRelations }}query();
+
+        // Search
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                {{ searchLogic }}
+            });
+        }
+
+        // Filters
+        {{ filterLogic }}
+
+        // Sort
+        if ($request->sort_by) {
+            $direction = $request->sort_direction === 'desc' ? 'desc' : 'asc';
+            $query->orderBy($request->sort_by, $direction);
+        } else {
+            $query->latest();
+        }
+
+        ${{ collectionVariable }} = $query->paginate($request->per_page ?? 10)->withQueryString();
+
+        return Inertia::render('{{ modelClass }}/Index', [
+            '{{ collectionVariable }}' => ${{ collectionVariable }},
+            'filters' => $request->only(['search', 'sort_by', 'sort_direction', {{ filterFields }}]),
+            {{ relatedData }}
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('{{ modelClass }}/Create', [
+            {{ relatedData }}
+        ]);
+    }
+
+    public function store(Store{{ modelClass }}Request $request)
+    {
+        $data = $request->validated();
+
+        {{ fileHandling }}
+
+        ${{ modelVariable }} = {{ modelClass }}::create($data);
+        {{ manyToManySync }}
+
+        return redirect()->back()->with('success', '{{ modelClass }} created successfully.');
+    }
+
+    public function edit({{ modelClass }} ${{ modelVariable }})
+    {
+{{ loadRelations }}
+        return Inertia::render('{{ modelClass }}/Edit', [
+            '{{ modelVariable }}' => ${{ modelVariable }},
+            {{ relatedData }}
+        ]);
+    }
+
+    public function update(Update{{ modelClass }}Request $request, {{ modelClass }} ${{ modelVariable }})
+    {
+        $data = $request->validated();
+
+        {{ fileHandling }}
+
+        ${{ modelVariable }}->update($data);
+        {{ manyToManySync }}
+
+        return redirect()->back()->with('success', '{{ modelClass }} updated successfully.');
+    }
+
+    public function destroy({{ modelClass }} ${{ modelVariable }})
+    {
+        ${{ modelVariable }}->delete();
+
+        return redirect()->back()->with('success', '{{ modelClass }} deleted.');
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->ids;
+        if (is_array($ids) && count($ids) > 0) {
+            {{ modelClass }}::whereIn('id', $ids)->delete();
+            return redirect()->back()->with('success', 'Selected items deleted successfully.');
+        }
+        return redirect()->back()->with('error', 'No items selected.');
+    }
+}

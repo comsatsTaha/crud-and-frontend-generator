@@ -1,0 +1,41 @@
+<script setup lang="ts">
+import AppLayout from '@/layouts/AppLayout.vue';
+import { type BreadcrumbItem } from '@/types';
+import { Head } from '@inertiajs/vue3';
+import Form from './Form.vue';
+
+const props = defineProps<{
+    {{ relationProps }}
+}>();
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: '{{ modelName }}s', href: '/{{ routeName }}' },
+    { title: 'Create', href: '/{{ routeName }}/create' },
+];
+</script>
+
+<template>
+    <Head title="Create {{ modelName }}" />
+
+    <AppLayout :breadcrumbs="breadcrumbs">
+        <div class="p-6">
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-white dark:bg-gray-900 rounded-xl shadow border border-gray-200 dark:border-gray-700">
+
+                    <!-- Header -->
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                            Create {{ modelName }}
+                        </h2>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="p-6">
+                        <Form v-bind="props" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </AppLayout>
+</template>

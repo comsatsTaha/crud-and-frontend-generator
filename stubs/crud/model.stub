@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+{{ softDeletesImport }}
+
+class {{ className }} extends Model
+{
+    {{ softDeletesUse }}
+    
+    protected $fillable = [
+        {{ fillable }}
+    ];
+
+{{ relationships }}
+}
