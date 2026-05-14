@@ -1,14 +1,16 @@
 # 🛠️ CRUD & Frontend Generator
 
-A Laravel + Vue 3 starter kit with a custom Artisan command that scaffolds full-stack CRUD operations — including backend (Model, Migration, Controller, Requests, Routes) and frontend (Vue/Inertia pages styled with Tailwind CSS + shadcn-vue) — from a single command.
+A Laravel + Vue 3 application that scaffolds full-stack CRUD operations through a **visual dashboard** — no terminal commands, no manual file creation. Fill in your model details, drag and drop your fields, and let the generator do the rest.
 
 ---
 
 ## ✨ Features
 
-- **One-command CRUD scaffolding** via a custom `php artisan` command
-- **Backend generation**: Model, Migration, Form Requests, Resource Controller, and Routes
-- **Frontend generation**: Vue 3 + Inertia.js pages (Index, Create, Edit, Show) with Tailwind CSS
+- **Visual dashboard** — generate CRUD entirely from the browser
+- **Drag & drop field builder** — add, reorder, and configure fields visually
+- **Field types & relationships** — define column types and model relationships through the UI
+- **Backend generation** — Model, Migration, Form Requests, Resource Controller, and Routes
+- **Frontend generation** — Vue 3 + Inertia.js pages (Index, Create, Edit, Show) with Tailwind CSS
 - **shadcn-vue components** out of the box for polished, accessible UI
 - **Laravel 12** with PHP 8.2+ support
 - **Vite + TypeScript** for fast frontend development
@@ -93,38 +95,35 @@ npm run dev
 
 ---
 
-## ⚡ Usage — CRUD Generator
+## ⚡ Usage — Dashboard Generator
 
-Use the custom Artisan command to scaffold a complete CRUD module for any model:
+Once the app is running, open it in your browser and navigate to the generator dashboard.
 
-```bash
-php artisan make:crud {ModelName}
-```
+### Step 1 — Enter Model Details
 
-**Example:**
+Type in your model name (e.g. `Product`) and any other top-level settings.
 
-```bash
-php artisan make:crud Product
-```
+### Step 2 — Build Your Fields
 
-This single command generates:
+Use the **drag & drop field builder** to:
+- Add fields and set their **column types** (string, integer, boolean, text, etc.)
+- Reorder fields by dragging them into place
+- Define **relationships** (hasMany, belongsTo, etc.) between models
 
-| File | Location |
-|------|----------|
-| Model | `app/Models/Product.php` |
-| Migration | `database/migrations/..._create_products_table.php` |
-| Controller | `app/Http/Controllers/ProductController.php` |
-| Form Requests | `app/Http/Requests/StoreProductRequest.php`, `UpdateProductRequest.php` |
-| Vue Pages | `resources/js/Pages/Products/Index.vue`, `Create.vue`, `Edit.vue`, `Show.vue` |
-| Routes | Appended to `routes/web.php` |
+### Step 3 — Generate
 
-After generation, run:
+Hit **Generate** and the dashboard produces:
 
-```bash
-php artisan migrate
-```
+| Generated File | Description |
+|----------------|-------------|
+| **Model** | Eloquent model with fillable fields and relationships |
+| **Migration** | Database migration with all defined columns |
+| **Controller** | Resource controller with full CRUD methods |
+| **Form Requests** | Store and Update request classes with validation |
+| **Routes** | Resource routes registered automatically |
+| **Vue Pages** | Index, Create, Edit, and Show pages styled with Tailwind CSS + shadcn-vue |
 
-Then visit `/products` in your browser to see the fully working CRUD interface.
+No terminal. No manual editing. Open your new resource in the browser and start building on top of it.
 
 ---
 
@@ -132,10 +131,8 @@ Then visit `/products` in your browser to see the fully working CRUD interface.
 
 ```
 ├── app/
-│   ├── Console/
-│   │   └── Commands/          # Custom Artisan CRUD command
 │   ├── Http/
-│   │   ├── Controllers/       # Generated resource controllers
+│   │   ├── Controllers/       # Generator controller + generated resource controllers
 │   │   └── Requests/          # Generated form request classes
 │   └── Models/                # Generated Eloquent models
 ├── database/
@@ -144,11 +141,11 @@ Then visit `/products` in your browser to see the fully working CRUD interface.
 │   └── js/
 │       ├── Components/        # Reusable Vue components (shadcn-vue)
 │       │   └── ui/            # UI primitives
-│       └── Pages/             # Inertia.js page components
+│       └── Pages/             # Dashboard UI + generated Inertia.js pages
 ├── routes/
-│   └── web.php                # Routes (generator appends here)
+│   └── web.php                # Routes (generator registers here)
 ├── stubs/
-│   └── crud/                  # Stub templates for code generation
+│   └── crud/                  # Stub templates used by the generator
 ├── components.json            # shadcn-vue configuration
 ├── tailwind.config.js         # Tailwind CSS configuration
 └── vite.config.ts             # Vite build configuration
@@ -203,19 +200,7 @@ npm run lint
 
 ## 🔄 Customizing Stubs
 
-The generator uses stub templates located in `stubs/crud/`. You can modify these to match your project's conventions:
-
-```
-stubs/
-└── crud/
-    ├── controller.stub
-    ├── model.stub
-    ├── migration.stub
-    ├── request.stub
-    └── vue-page.stub   # (and other page stubs)
-```
-
-Edit any stub file to change how generated files look — your changes will apply to all future `make:crud` calls.
+The generator uses stub templates located in `stubs/crud/`. You can modify these to match your project's conventions — your changes will apply to everything generated from the dashboard going forward.
 
 ---
 
